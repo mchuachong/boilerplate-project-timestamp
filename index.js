@@ -18,11 +18,57 @@ app.get("/", function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
 
-
+console.log(Date(2025-1-1))
 // your first API endpoint... 
 app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
+
+
+app.get("/api/:date?",(req,res)=>{
+  let date=req.params.date
+  let utc;
+  let unix;
+  let isInvalid=false;
+  let isEmpty=false;
+  //check if empty
+  if(date===undefined){
+    isEmpty=true}
+  
+  //if not unix
+  if(isNaN(date)){
+    utc=new Date(date).toUTCString()
+    unix=new Date(date).getTime() 
+    if(utc==="Invalid Date"){
+      isInvalid=true
+    }
+  }
+  //if unix
+  else{
+  unix=req.params.date
+  utc=new Date(Number(unix)).toUTCString()
+  }
+  //outputs
+  if(isEmpty){
+    utc=Date()
+    unix=new Date().getTime()
+    res.json({
+    "unix": Number(unix),
+    "utc": utc
+      })
+  }
+  else
+  if(isInvalid){
+    res.json({"error": "Invalid Date"})
+  }
+  else{
+    res.json({
+    "unix": Number(unix),
+    "utc": utc
+      })
+    } 
+    
+})
 
 
 
